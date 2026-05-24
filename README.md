@@ -70,8 +70,7 @@ This project was built to deeply understand how **WebSocket-based real-time syst
 ### 🏠 Landing Page
 > *(Add a screenshot of your landing page here)*
 ```
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/ae8893d0-9fb5-47cb-b970-f4f8af6a7cbc" />
-
+<img src="screenshots/Landing%20Page.png" width="100%" alt="Landing Page" />
 ```
 Modern dark-themed landing page with animated gradient background, room creation and joining interface, and feature highlights.
 
@@ -80,8 +79,7 @@ Modern dark-themed landing page with animated gradient background, room creation
 ### 🎨 Canvas Interface
 > *(Add a screenshot of the canvas interface here)*
 ```
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/2340db94-e8d9-4d7b-a60b-32fc1639a491" />
-
+<img src="screenshots/Canvas%20Interface.png" width="100%" alt="Canvas Interface" />
 ```
 Full-featured drawing workspace with a dark sidebar toolbar, color presets, brush size control, and the main drawing area with a dot-grid background.
 
@@ -90,8 +88,7 @@ Full-featured drawing workspace with a dark sidebar toolbar, color presets, brus
 ### 👥 Live Collaboration
 > *(Add a screenshot showing multiple users drawing together)*
 ```
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/d9a9f2b6-dcad-47fa-85d1-fd485c1b8b97" />
-
+<img src="screenshots/Live%20Collaboration.png" width="100%" alt="Live Collaboration" />
 ```
 Two or more users drawing simultaneously. Each user's cursor is visible with their name label, color-coded for easy identification.
 
