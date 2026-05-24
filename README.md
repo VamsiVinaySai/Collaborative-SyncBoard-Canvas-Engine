@@ -55,7 +55,7 @@ This project was built to deeply understand how **WebSocket-based real-time syst
 
 ## 🚀 Live Demo
 
-> 🔗 **[https://your-app-name.onrender.com](https://your-app-name.onrender.com)**
+> 🔗 **https://collaborative-syncboard-canvas-engine.onrender.com**
 
 **How to test real-time sync:**
 1. Open the link in two browser tabs (or share it with a friend)
@@ -71,6 +71,8 @@ This project was built to deeply understand how **WebSocket-based real-time syst
 > *(Add a screenshot of your landing page here)*
 ```
 screenshots/landing-page.png
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/fff4f91e-0d60-4376-9a4e-7f9e95935754" />
+
 ```
 Modern dark-themed landing page with animated gradient background, room creation and joining interface, and feature highlights.
 
@@ -80,6 +82,8 @@ Modern dark-themed landing page with animated gradient background, room creation
 > *(Add a screenshot of the canvas interface here)*
 ```
 screenshots/canvas-interface.png
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/2340db94-e8d9-4d7b-a60b-32fc1639a491" />
+
 ```
 Full-featured drawing workspace with a dark sidebar toolbar, color presets, brush size control, and the main drawing area with a dot-grid background.
 
@@ -89,6 +93,8 @@ Full-featured drawing workspace with a dark sidebar toolbar, color presets, brus
 > *(Add a screenshot showing multiple users drawing together)*
 ```
 screenshots/live-collaboration.png
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/d9a9f2b6-dcad-47fa-85d1-fd485c1b8b97" />
+
 ```
 Two or more users drawing simultaneously. Each user's cursor is visible with their name label, color-coded for easy identification.
 
@@ -296,7 +302,7 @@ sketchboard/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/sketchboard.git
+git clone https://github.com/your-username/Collaborative-SyncBoard-Canvas-Engine.git
 cd sketchboard
 ```
 
