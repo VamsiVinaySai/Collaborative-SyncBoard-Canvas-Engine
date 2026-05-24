@@ -1,0 +1,763 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg:        #07070d;
+  --surface:   rgba(255,255,255,0.04);
+  --surface-2: rgba(255,255,255,0.07);
+  --border:    rgba(255,255,255,0.07);
+  --border-2:  rgba(255,255,255,0.14);
+
+  --violet:    #8b5cf6;
+  --violet-2:  #a78bfa;
+  --violet-dim:rgba(139,92,246,0.12);
+  --violet-glow:rgba(139,92,246,0.3);
+  --pink:      #ec4899;
+  --cyan:      #22d3ee;
+  --cyan-dim:  rgba(34,211,238,0.1);
+  --cyan-border:rgba(34,211,238,0.25);
+  --success:   #34d399;
+  --danger:    #f87171;
+  --danger-dim:rgba(248,113,113,0.1);
+  --danger-border:rgba(248,113,113,0.25);
+
+  --t1: #fafafa;
+  --t2: #a1a1aa;
+  --t3: #52525b;
+
+  --font-display:'Space Grotesk', sans-serif;
+  --font-body:   'Inter', sans-serif;
+  --font-mono:   'JetBrains Mono', monospace;
+
+  --grad: linear-gradient(135deg, #8b5cf6, #ec4899);
+
+  /* Layout */
+  --topbar-h:  48px;
+  --statusbar-h: 30px;
+  --panel-w: 196px;
+}
+
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--t1);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+
+.topbar {
+  height: var(--topbar-h);
+  flex-shrink: 0;
+  background: rgba(7,7,13,0.92);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  z-index: 50;
+}
+
+/* ── Logo ── */
+.tb-logo {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--t1);
+  text-decoration: none;
+  letter-spacing: -0.03em;
+  flex-shrink: 0;
+}
+
+.tb-logo-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--grad);
+  display: grid;
+  place-items: center;
+  font-size: 0.75rem;
+  box-shadow: 0 0 12px var(--violet-glow);
+  flex-shrink: 0;
+}
+
+.tb-sep {
+  width: 1px;
+  height: 20px;
+  background: var(--border-2);
+  flex-shrink: 0;
+}
+
+/* ── Room badge ── */
+.room-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.room-badge-label {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--t3);
+}
+
+/* id="roomIdDisplay" — populated by canvas.js *
+#roomIdDisplay {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--t1);
+  letter-spacing: 0.1em;
+}
+
+.btn-copy-room {
+  padding: 3px 9px;
+  border-radius: 5px;
+  border: 1px solid var(--cyan-border);
+  background: var(--cyan-dim);
+  color: var(--cyan);
+  font-family: var(--font-body);
+  font-size: 0.66rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.btn-copy-room:hover { background: rgba(34,211,238,0.18); }
+
+/* ── Users section (avatars + count) ── */
+.tb-users {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* Avatar ring — created by canvas.js updateUsersCount() */
+.avatars-wrap {
+  display: flex;
+  align-items: center;
+}
+
+/* .user-avatar — created dynamically, gets bg color from JS */
+.user-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+  display: grid;
+  place-items: center;
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: #fff;
+  margin-left: -5px;
+  cursor: default;
+  position: relative;
+  transition: transform 0.15s;
+  flex-shrink: 0;
+}
+.avatars-wrap .user-avatar:first-child { margin-left: 0; }
+.user-avatar:hover { transform: translateY(-3px); z-index: 10; }
+
+/* Tooltip */
+.user-avatar[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a1a26;
+  border: 1px solid var(--border-2);
+  color: var(--t1);
+  font-size: 0.68rem;
+  font-family: var(--font-body);
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 5px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* id="usersCount" — updated by canvas.js */
+#usersCount {
+  font-size: 0.75rem;
+  color: var(--t2);
+  white-space: nowrap;
+}
+
+/* ── Your name tag ── */
+.you-tag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: var(--violet-dim);
+  border: 1px solid rgba(139,92,246,0.2);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--violet-2);
+  white-space: nowrap;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.you-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--success);
+  flex-shrink: 0;
+  animation: blink 2.4s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ── Topbar action buttons ── */
+.tb-btn {
+  padding: 5px 11px;
+  border-radius: 7px;
+  border: 1px solid var(--border-2);
+  background: transparent;
+  color: var(--t2);
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.tb-btn:hover { background: var(--surface-2); color: var(--t1); }
+
+.tb-btn-danger {
+  color: var(--danger);
+  border-color: var(--danger-border);
+  background: var(--danger-dim);
+}
+.tb-btn-danger:hover { background: rgba(248,113,113,0.18); }
+
+/* ═══════════════════════════════════════════
+   CANVAS STAGE
+   Full remaining height, canvas fills it
+   Sidebar FLOATS on top (position: absolute)
+═══════════════════════════════════════════ */
+.stage {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+  /* Deep dark canvas background */
+  background: #08080f;
+}
+
+/* Dot grid — same as landing page but tighter */
+.stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.055) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────
+   FLOATING TOOL PANEL
+   Positioned absolute over the canvas —
+   the big visual difference from sidebar approach.
+   Glassmorphism panel hovering left side.
+───────────────────────────────────────── */
+.tool-panel {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  bottom: 12px;
+  width: var(--panel-w);
+  z-index: 20;
+
+  background: rgba(8,8,16,0.88);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow:
+    0 24px 64px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(255,255,255,0.04) inset;
+
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px 8px 14px;
+  gap: 2px;
+
+  /* Thin custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-2) transparent;
+}
+.tool-panel::-webkit-scrollbar { width: 3px; }
+.tool-panel::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
+
+/* ── Section header ── */
+.panel-label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--t3);
+  padding: 8px 6px 4px;
+  user-select: none;
+}
+
+/* ── Thin separator ── */
+.panel-sep {
+  height: 1px;
+  background: var(--border);
+  margin: 6px 4px;
+}
+
+/* ── Tool button ──
+   ID required by canvas.js: brushTool, eraserTool, lineTool,
+   rectangleTool, circleTool — canvas.js toggles .active on these.
+── */
+.tool-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 8px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--t2);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.14s, color 0.14s, border-color 0.14s;
+  text-align: left;
+  position: relative;
+}
+
+.tool-btn:hover {
+  background: var(--surface-2);
+  color: var(--t1);
+}
+
+/* Active state — set by canvas.js selectTool() */
+.tool-btn.active {
+  background: var(--violet-dim);
+  border-color: rgba(139,92,246,0.25);
+  color: var(--violet-2);
+  /* Left accent bar */
+}
+.tool-btn.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 20%; bottom: 20%;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--violet);
+}
+
+.t-icon {
+  font-size: 0.9rem;
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Danger variant — clear canvas */
+.tool-btn-danger { color: var(--danger); }
+.tool-btn-danger:hover {
+  background: var(--danger-dim);
+  border-color: var(--danger-border);
+  color: var(--danger);
+}
+
+/* Download variant */
+.tool-btn-dl {
+  border-color: var(--border-2);
+  justify-content: center;
+  font-weight: 500;
+}
+.tool-btn-dl:hover {
+  background: var(--violet-dim);
+  border-color: rgba(139,92,246,0.3);
+  color: var(--violet-2);
+}
+
+/* ── Color presets ── */
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+  padding: 4px 6px;
+}
+
+.color-dot {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.14s, border-color 0.14s;
+  flex-shrink: 0;
+}
+.color-dot:hover { transform: scale(1.25); }
+.color-dot.selected { border-color: #fff; transform: scale(1.15); }
+
+/* Custom color picker row */
+.color-custom {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 6px 2px;
+}
+
+input[type="color"] {
+  width: 26px; height: 26px;
+  border: 1px solid var(--border-2);
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  padding: 2px;
+  flex-shrink: 0;
+}
+
+/* id="colorPreview" — background updated by canvas.js changeColor() */
+#colorPreview {
+  width: 20px; height: 20px;
+  border-radius: 5px;
+  border: 1px solid var(--border-2);
+  flex-shrink: 0;
+  transition: background 0.14s;
+}
+
+.color-custom-txt {
+  font-size: 0.72rem;
+  color: var(--t3);
+}
+
+/* ── Size control ── */
+.size-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 6px 4px;
+}
+
+.size-title {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--t3);
+}
+
+/* id="strokeDisplay" — updated by canvas.js */
+#strokeDisplay {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--violet-2);
+  font-weight: 500;
+}
+
+.size-slider-wrap { padding: 0 6px 4px; }
+
+/* Styled range track + thumb */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--surface-2);
+  outline: none;
+  cursor: pointer;
+  border: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  background: var(--violet);
+  cursor: pointer;
+  transition: transform 0.14s, box-shadow 0.14s;
+  box-shadow: 0 0 0 3px rgba(139,92,246,0);
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+  box-shadow: 0 0 0 3px rgba(139,92,246,0.25);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  background: var(--violet);
+  border: none;
+  cursor: pointer;
+}
+
+/* Live size preview dot */
+.size-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+}
+
+/* id="sizeDotPreview" — width/height set by canvas.js */
+#sizeDotPreview {
+  background: var(--t1);
+  border-radius: 50%;
+  width: 3px; height: 3px;
+  transition: width 0.1s, height 0.1s;
+}
+
+/* ═══════════════════════════════════════════
+   CANVAS LAYER — inside .stage
+═══════════════════════════════════════════ */
+.canvas-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* id="canvas" — local drawing layer */
+#canvas {
+  position: absolute;
+  top: 0; left: 0;
+  cursor: crosshair;
+  background: #ffffff;
+  display: block;
+}
+
+/* id="remoteCanvas" — remote users' layer */
+#remoteCanvas {
+  position: absolute;
+  top: 0; left: 0;
+  pointer-events: none;
+  display: block;
+}
+
+/* id="cursorsContainer" — remote cursor divs */
+#cursorsContainer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Remote cursor elements — created by canvas.js updateRemoteCursor() */
+.remote-cursor {
+  position: absolute;
+  pointer-events: none;
+  z-index: 20;
+  transition: left 0.05s linear, top 0.05s linear;
+}
+
+.cursor-pointer {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  position: relative;
+}
+.cursor-pointer::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.15;
+}
+
+.cursor-label {
+  position: absolute;
+  top: 14px; left: 4px;
+  font-family: var(--font-body);
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: #fff;
+  padding: 2px 7px;
+  border-radius: 99px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+/* ═══════════════════════════════════════════
+   STATUS BAR  — bottom strip
+═══════════════════════════════════════════ */
+.statusbar {
+  height: var(--statusbar-h);
+  flex-shrink: 0;
+  background: rgba(7,7,13,0.95);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 20px;
+}
+
+.sb-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.7rem;
+}
+
+.sb-label {
+  color: var(--t3);
+  font-size: 0.65rem;
+  font-weight: 500;
+}
+
+/* id="posDisplay", id="toolDisplay" */
+#posDisplay, #toolDisplay {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--t2);
+  font-weight: 400;
+}
+
+/* Connection indicator — right side */
+.sb-conn {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.conn-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: blink 2.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.conn-dot.error {
+  background: var(--danger);
+  animation: none;
+}
+
+/* id="statusDisplay" — text + .error class set by websocket.js */
+#statusDisplay { font-size: 0.7rem; color: var(--t2); }
+#statusDisplay.error { color: var(--danger); }
+
+/* ═══════════════════════════════════════════
+   TOAST SYSTEM
+═══════════════════════════════════════════ */
+.toast-wrap {
+  position: fixed;
+  bottom: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  align-items: center;
+  pointer-events: none;
+}
+
+.toast {
+  padding: 9px 16px;
+  background: rgba(20,20,32,0.95);
+  border: 1px solid var(--border-2);
+  border-radius: 9px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--t1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  animation: toastIn 0.25s ease, toastOut 0.25s ease 2.75s forwards;
+  white-space: nowrap;
+  font-family: var(--font-body);
+}
+.toast.success { border-color: rgba(52,211,153,0.3); }
+.toast.error   { border-color: var(--danger-border); }
+.toast.info    { border-color: var(--cyan-border); }
+
+@keyframes toastIn  { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+@keyframes toastOut { to{opacity:0;transform:translateY(6px)} }
+
+/* ═══════════════════════════════════════════
+   MOBILE TOOLBAR
+   Shown only < 768px — horizontal strip
+   floats above the status bar
+═══════════════════════════════════════════ */
+.mobile-bar {
+  display: none; /* hidden on desktop */
+}
+
+@media (max-width: 768px) {
+  /* Hide the floating panel on mobile */
+  .tool-panel { display: none; }
+
+  /* Show the bottom bar */
+  .mobile-bar {
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    padding: 6px 10px;
+    gap: 4px;
+    background: rgba(8,8,16,0.92);
+    border-top: 1px solid var(--border);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    flex-shrink: 0;
+    scrollbar-width: none;
+  }
+  .mobile-bar::-webkit-scrollbar { display: none; }
+
+  .m-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 6px 10px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--t2);
+    font-family: var(--font-body);
+    font-size: 0.58rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.14s;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .m-btn .m-icon { font-size: 1rem; }
+  .m-btn:hover, .m-btn.active {
+    background: var(--violet-dim);
+    border-color: rgba(139,92,246,0.25);
+    color: var(--violet-2);
+  }
+
+  /* Compact topbar on mobile */
+  .tb-logo span,
+  .you-tag { display: none; }
+  .room-badge-label { display: none; }
+
+  /* Canvas stage still fills remaining space */
+  .stage { flex: 1; }
+}
+
+@media (min-width: 769px) {
+  .mobile-bar { display: none !important; }
+}

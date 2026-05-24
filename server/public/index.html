@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sketchboard — Real-Time Collaborative Canvas</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="bg-glow"  aria-hidden="true"></div>
+  <div class="bg-noise" aria-hidden="true"></div>
+  <div class="bg-grid"  aria-hidden="true"></div>
+
+  <div class="page">
+
+    <nav class="nav" id="mainNav">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-icon">✏️</div>
+        Sketchboard
+      </a>
+
+      <div class="nav-links">
+        <a class="nav-link"
+           href="https://github.com/VamsiVinaySai"
+           target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+                     0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+                     -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66
+                     .07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15
+                     -.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27
+                     .68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12
+                     .51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48
+                     0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+          </svg>
+          GitHub
+        </a>
+      </div>
+    </nav>
+
+    <main class="hero">
+      <div class="hero-inner">
+
+        <div class="hero-badge">
+          <span class="badge-pip"></span>
+          Free · No sign-up · Open source
+        </div>
+
+        <h1 class="hero-h1">
+          Sketch together,<br>
+          <span class="grad">in real-time.</span>
+        </h1>
+
+        <p class="hero-sub">
+          A multiplayer whiteboard that syncs instantly. Open a room, share the
+          12-character code, and draw together — no account needed.
+        </p>
+
+        <div class="mode-toggle">
+          <button class="mode-btn active"
+                  id="modeCreate"
+                  onclick="switchMode('create')">
+            Create Room
+          </button>
+          <button class="mode-btn"
+                  id="modeJoin"
+                  onclick="switchMode('join')">
+            Join Room
+          </button>
+        </div>
+
+        <div class="form-bar">
+
+          <div class="form-fields active" id="createFields">
+
+            <div class="field-slot">
+              <span class="field-lbl">Your name</span>
+              <!--
+                id="createName" — read by main.js createRoom()
+                Stores into localStorage as 'userName'
+              -->
+              <input class="field-input"
+                     type="text"
+                     id="createName"
+                     placeholder="e.g. Alex"
+                     maxlength="30"
+                     autocomplete="name">
+            </div>
+
+            <div class="field-divider"></div>
+
+            <div class="field-slot field-slot--lg">
+              <span class="field-lbl">Room name</span>
+              <!--
+                id="createRoomName" — read by main.js createRoom()
+                Stores into localStorage as 'roomName'
+              -->
+              <input class="field-input"
+                     type="text"
+                     id="createRoomName"
+                     placeholder="e.g. Design Sprint"
+                     maxlength="50">
+            </div>
+
+            <div class="field-divider"></div>
+
+            <div class="field-slot field-slot--sm">
+              <span class="field-lbl">Max users</span>
+              <!--
+                id="createCapacity" — read by main.js createRoom()
+                Stores into localStorage as 'roomCapacity'
+              -->
+              <input class="field-input"
+                     type="number"
+                     id="createCapacity"
+                     min="2" max="20" value="5">
+            </div>
+
+            <button class="field-cta" onclick="createRoom()">
+              Create &nbsp;→
+            </button>
+
+          </div><!-- /createFields -->
+
+          <!-- JOIN mode row -->
+          <div class="form-fields" id="joinFields">
+
+            <div class="field-slot">
+              <span class="field-lbl">Your name</span>
+              <!--
+                id="joinName" — read by main.js joinRoom()
+                Stores into localStorage as 'userName'
+              -->
+              <input class="field-input"
+                     type="text"
+                     id="joinName"
+                     placeholder="e.g. Alex"
+                     maxlength="30"
+                     autocomplete="name">
+            </div>
+
+            <div class="field-divider"></div>
+
+            <div class="field-slot field-slot--lg">
+              <span class="field-lbl">Room ID</span>
+              <!--
+                id="joinRoomId" — read by main.js joinRoom()
+                Auto-uppercased as user types
+              -->
+              <input class="field-input field-input--mono"
+                     type="text"
+                     id="joinRoomId"
+                     placeholder="ABC123DEF456"
+                     maxlength="12"
+                     spellcheck="false"
+                     autocomplete="off">
+            </div>
+
+            <button class="field-cta field-cta--outline" onclick="joinRoom()">
+              Join &nbsp;→
+            </button>
+
+          </div><!-- /joinFields -->
+
+        </div><!-- /form-bar -->
+
+        <!-- Inline error message (shown below bar) -->
+        <div class="form-error" id="formError"></div>
+
+        <!-- Room ID reveal (shown after createRoom()) -->
+        <div class="room-result" id="roomResult">
+          <span class="result-label">Room ID</span>
+          <!-- id="createRoomId" populated by main.js -->
+          <span class="result-id" id="createRoomId">—</span>
+          <button class="result-copy" onclick="copyRoomId()">Copy</button>
+          <span class="result-note">Redirecting&hellip;</span>
+        </div>
+
+        <!-- Perks strip -->
+        <div class="perks-row">
+          <div class="perk"><span class="perk-icon">⚡</span> Instant sync</div>
+          <div class="perk"><span class="perk-icon">↩</span> Per-user undo</div>
+          <div class="perk"><span class="perk-icon">🖱</span> Live cursors</div>
+          <div class="perk"><span class="perk-icon">🎨</span> 5 drawing tools</div>
+          <div class="perk"><span class="perk-icon">📥</span> Export PNG</div>
+        </div>
+
+      </div><!-- /hero-inner -->
+    </main>
+
+    <!-- ══════════════════════════════════════
+         BENTO FEATURES GRID
+    ══════════════════════════════════════ -->
+    <section class="features">
+
+      <div class="features-eyebrow">Built different</div>
+      <h2 class="features-h2">Everything you need to draw together</h2>
+
+      <!--
+        Asymmetric bento grid:
+        Left column: one tall card spanning 2 rows
+        Right column: two shorter cards stacked
+      -->
+      <div class="bento">
+
+        <!-- TALL — Real-Time Sync -->
+        <div class="bento-card bento-card--tall">
+          <div class="bento-icon">⚡</div>
+          <div class="bento-title">Real-Time Sync</div>
+          <div class="bento-desc">
+            Every brushstroke broadcasts instantly over a persistent WebSocket
+            connection. What you draw, every teammate sees in under 50ms —
+            no refresh, no delay, no polling.
+          </div>
+          <div class="bento-tag">
+            <span>🔌</span> Socket.IO · WebSocket
+          </div>
+          <!-- Decorative large number -->
+          <div class="bento-deco-num">&lt;50</div>
+        </div>
+
+        <!-- TOP-RIGHT — Smart Undo -->
+        <div class="bento-card">
+          <div class="bento-icon">↩️</div>
+          <div class="bento-title">Smart Undo / Redo</div>
+          <div class="bento-desc">
+            Per-user undo tracked server-side. Undo only your own strokes —
+            never a teammate's. Redo stack preserved until you draw again.
+          </div>
+        </div>
+
+        <!-- BOTTOM-RIGHT — two small cards side by side -->
+        <div class="bento-card">
+          <div class="bento-icon">🖱️</div>
+          <div class="bento-title">Live Cursors</div>
+          <div class="bento-desc">
+            Every connected user's cursor appears in real-time, color-coded
+            and labelled with their name. Throttled to 30fps.
+          </div>
+        </div>
+
+      </div><!-- /bento -->
+
+      <!-- Second row — 3 equal cards -->
+      <div class="bento" style="grid-template-columns: 1fr 1fr 1fr; margin-top: 12px;">
+
+        <div class="bento-card">
+          <div class="bento-icon">🛠️</div>
+          <div class="bento-title">Drawing Toolkit</div>
+          <div class="bento-desc">
+            Brush, eraser, line, rectangle, circle.
+            Adjustable size from 1–50px. 12 preset colors plus full custom picker.
+          </div>
+        </div>
+
+        <div class="bento-card">
+          <div class="bento-icon">🔗</div>
+          <div class="bento-title">Zero Friction</div>
+          <div class="bento-desc">
+            No accounts. No downloads. Share a 12-character Room ID and anyone
+            can join. Rooms auto-delete when the last user leaves.
+          </div>
+        </div>
+
+        <div class="bento-card">
+          <div class="bento-icon">📥</div>
+          <div class="bento-title">Export & Download</div>
+          <div class="bento-desc">
+            Download the full canvas as a merged PNG — both your layer and your
+            teammates' layers composited into one clean file.
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /features -->
+
+    <!-- ══════════════════════════════════════
+         FOOTER
+    ══════════════════════════════════════ -->
+    <footer>
+      <div class="footer-left">
+        <span>Built with Socket.IO + HTML5 Canvas</span>
+        <div class="footer-dot"></div>
+        <span>MIT License</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/VamsiVinaySai"
+           target="_blank" rel="noopener">GitHub</a>
+        <a href="ARCHITECTURE.md">Architecture</a>
+      </div>
+    </footer>
+
+  </div><!-- /page -->
+
+  <script src="main.js"></script>
+
+  <script>
+    /* Navbar becomes solid when user scrolls */
+    window.addEventListener('scroll', () => {
+      document.getElementById('mainNav')
+              .classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
+
+</body>
+</html>

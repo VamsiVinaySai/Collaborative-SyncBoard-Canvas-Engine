@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sketchboard — Drawing</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="canvas-style.css">
+</head>
+<body>
+
+  <!-- Toast container — filled by showToast() in canvas.js -->
+  <div class="toast-wrap" id="toastWrap"></div>
+
+  <!-- ════════════════════════════════════════
+       TOP BAR
+  ════════════════════════════════════════ -->
+  <header class="topbar">
+
+    <!-- Logo — links back to lobby -->
+    <a href="index.html" class="tb-logo" title="Back to lobby">
+      <div class="tb-logo-icon">✏️</div>
+      <span>Sketchboard</span>
+    </a>
+
+    <div class="tb-sep"></div>
+
+    <!-- Room badge: label + monospaced ID + copy button -->
+    <div class="room-badge">
+      <span class="room-badge-label">Room</span>
+      <!--
+        id="roomIdDisplay"
+        Text set by canvas.js initCanvas()
+      -->
+      <span id="roomIdDisplay">Loading…</span>
+      <button class="btn-copy-room" onclick="copyRoomCode()">Copy</button>
+    </div>
+
+    <!-- Avatars + online count (right side, pushed by margin-left:auto in CSS) -->
+    <div class="tb-users">
+      <!--
+        id="usersList"
+        Avatar .user-avatar divs created by canvas.js updateUsersCount()
+      -->
+      <div class="avatars-wrap" id="usersList"></div>
+      <!--
+        id="usersCount"
+        Text set by canvas.js updateUsersCount()
+      -->
+      <span id="usersCount">1 online</span>
+    </div>
+
+    <div class="tb-sep"></div>
+
+    <!-- Current user name pill -->
+    <div class="you-tag">
+      <span class="you-dot"></span>
+      <!--
+        id="userNameDisplay"
+        Text set by canvas.js initCanvas()
+      -->
+      <span id="userNameDisplay">You</span>
+    </div>
+
+    <!-- Action buttons -->
+    <button class="tb-btn" onclick="toggleFullscreen()">⛶</button>
+    <button class="tb-btn tb-btn-danger" onclick="leaveRoom()">Leave</button>
+
+  </header>
+
+  <!-- ════════════════════════════════════════
+       CANVAS STAGE  (full remaining height)
+       The floating tool panel sits inside here
+       via position:absolute — canvas fills everything.
+  ════════════════════════════════════════ -->
+  <div class="stage">
+
+    <!-- ── FLOATING TOOL PANEL ────────────────
+         Positioned absolute, left side.
+         Floats over the canvas — not beside it.
+         This is the main visual difference from
+         the previous sidebar design.
+    ──────────────────────────────────────── -->
+    <aside class="tool-panel" id="toolPanel">
+
+      <!-- DRAW TOOLS -->
+      <div class="panel-label">Draw</div>
+
+      <!--
+        IDs required by canvas.js selectTool():
+          brushTool, eraserTool, lineTool, rectangleTool, circleTool
+        canvas.js removes .active from all .tool-btn, then adds
+        .active to the matching ID element.
+      -->
+      <button class="tool-btn active" id="brushTool" onclick="selectTool('brush')">
+        <span class="t-icon">🖌️</span> Brush
+      </button>
+      <button class="tool-btn" id="eraserTool" onclick="selectTool('eraser')">
+        <span class="t-icon">🧹</span> Eraser
+      </button>
+
+      <div class="panel-sep"></div>
+
+      <!-- SHAPES -->
+      <div class="panel-label">Shapes</div>
+
+      <button class="tool-btn" id="lineTool" onclick="selectTool('line')">
+        <span class="t-icon">╱</span> Line
+      </button>
+      <button class="tool-btn" id="rectangleTool" onclick="selectTool('rectangle')">
+        <span class="t-icon">⬜</span> Rectangle
+      </button>
+      <button class="tool-btn" id="circleTool" onclick="selectTool('circle')">
+        <span class="t-icon">⭕</span> Circle
+      </button>
+
+      <div class="panel-sep"></div>
+
+      <!-- COLOR -->
+      <div class="panel-label">Color</div>
+
+      <!--
+        12 preset swatches — clicking calls pickPreset(el, hex)
+        from canvas.js which calls changeColor() and manages .selected class.
+      -->
+      <div class="color-grid">
+        <div class="color-dot selected"
+             style="background:#000000"
+             onclick="pickPreset(this,'#000000')"
+             title="Black"></div>
+        <div class="color-dot"
+             style="background:#ffffff;border-color:rgba(255,255,255,0.25)"
+             onclick="pickPreset(this,'#ffffff')"
+             title="White"></div>
+        <div class="color-dot"
+             style="background:#71717a"
+             onclick="pickPreset(this,'#71717a')"
+             title="Gray"></div>
+        <div class="color-dot"
+             style="background:#f87171"
+             onclick="pickPreset(this,'#f87171')"
+             title="Red"></div>
+        <div class="color-dot"
+             style="background:#fb923c"
+             onclick="pickPreset(this,'#fb923c')"
+             title="Orange"></div>
+        <div class="color-dot"
+             style="background:#facc15"
+             onclick="pickPreset(this,'#facc15')"
+             title="Yellow"></div>
+        <div class="color-dot"
+             style="background:#4ade80"
+             onclick="pickPreset(this,'#4ade80')"
+             title="Green"></div>
+        <div class="color-dot"
+             style="background:#22d3ee"
+             onclick="pickPreset(this,'#22d3ee')"
+             title="Cyan"></div>
+        <div class="color-dot"
+             style="background:#60a5fa"
+             onclick="pickPreset(this,'#60a5fa')"
+             title="Blue"></div>
+        <div class="color-dot"
+             style="background:#a78bfa"
+             onclick="pickPreset(this,'#a78bfa')"
+             title="Violet"></div>
+        <div class="color-dot"
+             style="background:#f472b6"
+             onclick="pickPreset(this,'#f472b6')"
+             title="Pink"></div>
+        <div class="color-dot"
+             style="background:#a16207"
+             onclick="pickPreset(this,'#a16207')"
+             title="Brown"></div>
+      </div>
+
+      <!-- Custom color picker -->
+      <div class="color-custom">
+        <!--
+          id="colorPicker"    — value kept in sync by canvas.js changeColor()
+          id="colorPreview"   — background set by canvas.js changeColor()
+          onchange calls handleCustomColor() which clears preset selection
+        -->
+        <input
+          type="color"
+          id="colorPicker"
+          value="#000000"
+          onchange="handleCustomColor(this.value)"
+          title="Custom color">
+        <span id="colorPreview" style="background:#000000"></span>
+        <span class="color-custom-txt">Custom</span>
+      </div>
+
+      <div class="panel-sep"></div>
+
+      <!-- SIZE -->
+      <div class="size-row">
+        <span class="size-title">Size</span>
+        <!-- id="strokeDisplay" — updated by canvas.js changeStrokeWidth() -->
+        <span id="strokeDisplay">3px</span>
+      </div>
+
+      <div class="size-slider-wrap">
+        <!--
+          id="strokeWidth" — required by canvas.js
+          oninput calls changeStrokeWidth() from canvas.js
+        -->
+        <input
+          type="range"
+          id="strokeWidth"
+          min="1" max="50" value="3"
+          oninput="changeStrokeWidth(this.value)">
+      </div>
+
+      <!-- Live size preview dot — width/height set by canvas.js -->
+      <div class="size-preview">
+        <div id="sizeDotPreview"></div>
+      </div>
+
+      <div class="panel-sep"></div>
+
+      <!-- ACTIONS -->
+      <div class="panel-label">Actions</div>
+
+      <button class="tool-btn" onclick="undoAction()" title="Undo (Ctrl+Z)">
+        <span class="t-icon">↶</span> Undo
+      </button>
+      <button class="tool-btn" onclick="redoAction()" title="Redo (Ctrl+Y)">
+        <span class="t-icon">↷</span> Redo
+      </button>
+      <button class="tool-btn tool-btn-danger" onclick="clearCanvas()">
+        <span class="t-icon">🗑️</span> Clear
+      </button>
+
+      <div class="panel-sep"></div>
+
+      <button class="tool-btn tool-btn-dl" onclick="downloadCanvas()">
+        <span class="t-icon">⬇️</span> Download PNG
+      </button>
+
+    </aside><!-- /tool-panel -->
+
+    <!-- ── CANVAS LAYERS ─────────────────────
+         Both canvases fill the full stage.
+         The floating panel sits on top via z-index.
+
+         #canvas      — local drawing (white bg, cursor: crosshair)
+         #remoteCanvas — remote users (transparent, pointer-events: none)
+         #cursorsContainer — floating cursor name labels
+    ──────────────────────────────────────── -->
+    <div class="canvas-wrap">
+      <canvas id="canvas"></canvas>
+      <canvas id="remoteCanvas"></canvas>
+      <div id="cursorsContainer"></div>
+    </div>
+
+  </div><!-- /stage -->
+
+  <!-- ════════════════════════════════════════
+       MOBILE TOOLBAR
+       Only shown < 768px. Mirrors key tools.
+       Calls same canvas.js functions as the panel.
+  ════════════════════════════════════════ -->
+  <div class="mobile-bar" id="mobileBar">
+
+    <button class="m-btn active" onclick="selectTool('brush'); mobileSelect(this)">
+      <span class="m-icon">🖌️</span>Brush
+    </button>
+    <button class="m-btn" onclick="selectTool('eraser'); mobileSelect(this)">
+      <span class="m-icon">🧹</span>Erase
+    </button>
+    <button class="m-btn" onclick="selectTool('line'); mobileSelect(this)">
+      <span class="m-icon">╱</span>Line
+    </button>
+    <button class="m-btn" onclick="selectTool('rectangle'); mobileSelect(this)">
+      <span class="m-icon">⬜</span>Rect
+    </button>
+    <button class="m-btn" onclick="selectTool('circle'); mobileSelect(this)">
+      <span class="m-icon">⭕</span>Circle
+    </button>
+
+    <!-- Inline color for mobile -->
+    <input
+      type="color"
+      id="mobileColor"
+      value="#000000"
+      onchange="handleCustomColor(this.value)"
+      style="width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,0.14);
+             background:transparent;cursor:pointer;padding:2px;flex-shrink:0;">
+
+    <button class="m-btn" onclick="undoAction()">
+      <span class="m-icon">↶</span>Undo
+    </button>
+    <button class="m-btn" onclick="clearCanvas()">
+      <span class="m-icon">🗑️</span>Clear
+    </button>
+
+  </div>
+
+  <!-- ════════════════════════════════════════
+       STATUS BAR  — thin bottom strip
+  ════════════════════════════════════════ -->
+  <div class="statusbar">
+
+    <div class="sb-item">
+      <span class="sb-label">Pos</span>
+      <!-- id="posDisplay" — updated by canvas.js handleMouseMove() -->
+      <span id="posDisplay">0, 0</span>
+    </div>
+
+    <div class="sb-item">
+      <span class="sb-label">Tool</span>
+      <!-- id="toolDisplay" — updated by canvas.js selectTool() -->
+      <span id="toolDisplay">Brush</span>
+    </div>
+
+    <!-- Connection status — pushed right by margin-left:auto -->
+    <div class="sb-conn">
+      <!-- id="connDot" — .error class toggled by patchConnectionDot() in canvas.js -->
+      <span class="conn-dot" id="connDot"></span>
+      <!--
+        id="statusDisplay"
+        Text set by websocket.js updateStatus()
+        .error class added by websocket.js when disconnected
+      -->
+      <span id="statusDisplay">Connecting…</span>
+    </div>
+
+  </div>
+
+  <!--
+    Load order matters:
+      1. websocket.js — defines window.wsManager
+      2. canvas.js    — uses wsManager
+  -->
+  <script src="websocket.js"></script>
+  <script src="canvas.js"></script>
+
+</body>
+</html>
