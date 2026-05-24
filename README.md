@@ -70,8 +70,7 @@ This project was built to deeply understand how **WebSocket-based real-time syst
 ### 🏠 Landing Page
 > *(Add a screenshot of your landing page here)*
 ```
-screenshots/landing-page.png
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/fff4f91e-0d60-4376-9a4e-7f9e95935754" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/ae8893d0-9fb5-47cb-b970-f4f8af6a7cbc" />
 
 ```
 Modern dark-themed landing page with animated gradient background, room creation and joining interface, and feature highlights.
@@ -81,7 +80,6 @@ Modern dark-themed landing page with animated gradient background, room creation
 ### 🎨 Canvas Interface
 > *(Add a screenshot of the canvas interface here)*
 ```
-screenshots/canvas-interface.png
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/2340db94-e8d9-4d7b-a60b-32fc1639a491" />
 
 ```
@@ -92,7 +90,6 @@ Full-featured drawing workspace with a dark sidebar toolbar, color presets, brus
 ### 👥 Live Collaboration
 > *(Add a screenshot showing multiple users drawing together)*
 ```
-screenshots/live-collaboration.png
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/d9a9f2b6-dcad-47fa-85d1-fd485c1b8b97" />
 
 ```
